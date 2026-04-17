@@ -1,0 +1,25 @@
+{
+  "name": "abacus-pro",
+  "version": "1.0.0",
+  "description": "Professional mental math practice app with competition and leaderboard",
+  "main": "index.html",
+  "scripts": {
+    "start": "open index.html",
+    "deploy": "git push origin main"
+  },
+  "keywords": [
+    "abacus",
+    "mental-math",
+    "education",
+    "practice",
+    "competition",
+    "learning"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/abacus-app.git"
+  },
+  "homepage": "https://github.com/yourusername/abacus-app#readme"
+}

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abacus Pro - Master Mental Math</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <h1 class="logo">🧮 Abacus Pro</h1>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="app-main">
+    <!-- HOME PAGE -->
+    <section id="home-page" class="page active">
+      <div class="container">
+        <div class="home-hero">
+          <h2 class="hero-title">Master Mental Math</h2>
+          <p class="hero-subtitle">Build your calculation skills with interactive practice</p>
+        </div>
+
+        <div class="cards-grid">
+          <div class="card card-practice" onclick="goToPage('practice-page')">
+            <div class="card-icon">📚</div>
+            <h3>Practice Mode</h3>
+            <p>Train with custom difficulty levels</p>
+            <span class="card-arrow">→</span>
+          </div>
+
+          <div class="card card-arena" onclick="goToPage('arena-page')">
+            <div class="card-icon">⚔️</div>
+            <h3>Daily Arena</h3>
+            <p>Compete and track your progress</p>
+            <span class="card-arrow">→</span>
+          </div>
+
+          <div class="card card-leaderboard" onclick="goToPage('leaderboard-page')">
+            <div class="card-icon">🏆</div>
+            <h3>Leaderboard</h3>
+            <p>View top scores and records</p>
+            <span class="card-arrow">→</span>
+          </div>
+
+          <div class="card card-tool" onclick="goToPage('tool-page')">
+            <div class="card-icon">🔧</div>
+            <h3>Abacus Tool</h3>
+            <p>Interactive calculation tool</p>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+
+        <div class="stats-container">
+          <div class="stat-item">
+            <span class="stat-label">Total Attempts</span>
+            <span class="stat-value" id="totalAttempts">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Best Accuracy</span>
+            <span class="stat-value" id="bestAccuracy">0%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRACTICE PAGE -->
+    <section id="practice-page" class="page">
+      <div class="container">
+        <!-- Mode & Difficulty Selection -->
+        <div id="practice-setup" class="practice-setup">
+          <h2>Practice Mode</h2>
+          
+          <div class="setup-section">
+            <label>Select Mode:</label>
+            <div class="button-group">
+              <button class="mode-btn active" data-mode="addition" onclick="selectMode('addition')">➕ Addition</button>
+              <button class="mode-btn" data-mode="subtraction" onclick="selectMode('subtraction')">➖ Subtraction</button>
+              <button class="mode-btn" data-mode="multiplication" onclick="selectMode('multiplication')">✖️ Multiplication</button>
+              <button class="mode-btn" data-mode="division" onclick="selectMode('division')">➗ Division</button>
+            </div>
+          </div>
+
+          <div class="setup-section">
+            <label>Min Number:</label>
+            <input type="number" id="minNum" min="1" max="1000" value="10" class="setup-input">
+          </div>
+
+          <div class="setup-section">
+            <label>Max Number:</label>
+            <input type="number" id="maxNum" min="1" max="1000" value="100" class="setup-input">
+          </div>
+
+          <div class="setup-section">
+            <label>Number of Questions:</label>
+            <input type="number" id="numQuestions" min="1" max="50" value="10" class="setup-input">
+          </div>
+
+          <div class="setup-section">
+            <label>Time per Question (seconds):</label>
+            <input type="number" id="timePerQuestion" min="5" max="120" value="30" class="setup-input">
+          </div>
+
+          <button class="btn btn-primary btn-large" onclick="startPractice()">Start Practice</button>
+        </div>
+
+        <!-- Practice Session -->
+        <div id="practice-session" class="practice-session hidden">
+          <div class="practice-header">
+            <div class="progress-info">
+              <span id="questionCount">1/10</span>
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+            </div>
+            <div class="practice-timer">
+              <span id="practiceTimer">30s</span>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-text" id="practiceQuestion">5 + 3 = ?</div>
+            <div class="answer-input-group">
+              <input type="number" id="practiceAnswer" placeholder="Your answer" class="answer-input" onkeypress="handleAnswerKey(event)">
+              <button class="btn btn-primary" onclick="submitPracticeAnswer()">Submit</button>
+            </div>
+          </div>
+
+          <div id="feedback" class="feedback hidden"></div>
+
+          <button class="btn btn-secondary" onclick="cancelPractice()">Exit Practice</button>
+        </div>
+
+        <!-- Practice Results -->
+        <div id="practice-results" class="practice-results hidden">
+          <h2>Practice Complete!</h2>
+          <div class="results-summary">
+            <div class="result-item">
+              <span>Correct Answers</span>
+              <span class="result-value" id="correctCount">0/10</span>
+            </div>
+            <div class="result-item">
+              <span>Accuracy</span>
+              <span class="result-value" id="accuracyPercent">0%</span>
+            </div>
+            <div class="result-item">
+              <span>Average Time</span>
+              <span class="result-value" id="avgTime">0s</span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-large" onclick="goToPage('practice-page')">Try Again</button>
+          <button class="btn btn-secondary btn-large" onclick="goToPage('home-page')">Home</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARENA PAGE -->
+    <section id="arena-page" class="page">
+      <div class="container">
+        <div id="arena-start" class="arena-start">
+          <h2>Daily Arena</h2>
+          <p class="arena-subtitle">Test your skills under pressure with a timed competition!</p>
+          
+          <div class="arena-info-grid">
+            <div class="arena-info-card">
+              <span class="arena-info-label">Duration</span>
+              <span class="arena-info-value">60 seconds</span>
+            </div>
+            <div class="arena-info-card">
+              <span class="arena-info-label">Questions</span>
+              <span class="arena-info-value">As many as you can</span>
+            </div>
+            <div class="arena-info-card">
+              <span class="arena-info-label">Scoring</span>
+              <span class="arena-info-value">Points per question</span>
+            </div>
+          </div>
+
+          <input type="text" id="playerName" placeholder="Enter your name" class="setup-input player-name-input">
+          <button class="btn btn-primary btn-large" onclick="startArena()">Start Competition</button>
+        </div>
+
+        <div id="arena-session" class="arena-session hidden">
+          <div class="arena-header">
+            <div class="arena-timer-display">
+              <div class="timer-circle">
+                <div class="timer-inner" id="timerInner">
+                  <span id="arenaTimer">60</span>
+                </div>
+              </div>
+            </div>
+            <div class="arena-stats">
+              <div class="stat">
+                <span class="stat-label">Score</span>
+                <span class="stat-value" id="arenaScore">0</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Correct</span>
+                <span class="stat-value" id="arenaCorrect">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-text" id="arenaQuestion">5 + 3 = ?</div>
+            <div class="answer-input-group">
+              <input type="number" id="arenaAnswer" placeholder="Answer" class="answer-input" onkeypress="handleArenaAnswerKey(event)">
+              <button class="btn btn-primary" onclick="submitArenaAnswer()">→</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="arena-results" class="arena-results hidden">
+          <h2>Arena Complete! 🎉</h2>
+          <div class="final-score-display">
+            <div class="score-circle">
+              <span id="finalScore">0</span>
+            </div>
+          </div>
+          
+          <div class="results-summary">
+            <div class="result-item">
+              <span>Score</span>
+              <span class="result-value" id="arenaFinalScore">0</span>
+            </div>
+            <div class="result-item">
+              <span>Correct Answers</span>
+              <span class="result-value" id="arenaFinalCorrect">0</span>
+            </div>
+            <div class="result-item">
+              <span>Accuracy</span>
+              <span class="result-value" id="arenaFinalAccuracy">0%</span>
+            </div>
+            <div class="result-item">
+              <span>Time Taken</span>
+              <span class="result-value" id="arenaTimeTaken">60s</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-large" onclick="saveArenaScore()">Save Score</button>
+          <button class="btn btn-secondary btn-large" onclick="goToPage('arena-page')">Try Again</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEADERBOARD PAGE -->
+    <section id="leaderboard-page" class="page">
+      <div class="container">
+        <h2>Leaderboard 🏆</h2>
+        
+        <div class="leaderboard-filters">
+          <button class="filter-btn active" data-filter="all" onclick="filterLeaderboard('all')">All</button>
+          <button class="filter-btn" data-filter="addition" onclick="filterLeaderboard('addition')">Addition</button>
+          <button class="filter-btn" data-filter="subtraction" onclick="filterLeaderboard('subtraction')">Subtraction</button>
+          <button class="filter-btn" data-filter="multiplication" onclick="filterLeaderboard('multiplication')">Multiplication</button>
+          <button class="filter-btn" data-filter="division" onclick="filterLeaderboard('division')">Division</button>
+        </div>
+
+        <div id="leaderboardList" class="leaderboard-list">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <div id="emptyLeaderboard" class="empty-state">
+          <p>No scores yet. Start competing to appear on the leaderboard!</p>
+        </div>
+
+        <button class="btn btn-secondary btn-large" onclick="goToPage('home-page')">Home</button>
+      </div>
+    </section>
+
+    <!-- ABACUS TOOL PAGE -->
+    <section id="tool-page" class="page">
+      <div class="container">
+        <h2>Abacus Tool</h2>
+        
+        <div class="abacus-display">
+          <div class="abacus-container" id="abacusContainer">
+            <!-- Populated by JavaScript -->
+          </div>
+          
+          <div class="abacus-value-display">
+            <span class="value-label">Current Value:</span>
+            <span class="value-number" id="abacusValue">0</span>
+          </div>
+
+          <div class="abacus-controls">
+            <button class="btn btn-secondary" onclick="resetAbacus()">Reset</button>
+            <button class="btn btn-secondary" onclick="randomizeAbacus()">Randomize</button>
+          </div>
+        </div>
+
+        <div class="abacus-guide">
+          <h3>How to use:</h3>
+          <p>Click on beads to move them. Red beads represent active values.</p>
+        </div>
+
+        <button class="btn btn-secondary btn-large" onclick="goToPage('home-page')">Home</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation (Mobile) -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="home-page" onclick="goToPage('home-page')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-btn" data-page="practice-page" onclick="goToPage('practice-page')">
+      <span class="nav-icon">📚</span>
+      <span class="nav-label">Practice</span>
+    </button>
+    <button class="nav-btn" data-page="arena-page" onclick="goToPage('arena-page')">
+      <span class="nav-icon">⚔️</span>
+      <span class="nav-label">Arena</span>
+    </button>
+    <button class="nav-btn" data-page="leaderboard-page" onclick="goToPage('leaderboard-page')">
+      <span class="nav-icon">🏆</span>
+      <span class="nav-label">Leaders</span>
+    </button>
+    <button class="nav-btn" data-page="tool-page" onclick="goToPage('tool-page')">
+      <span class="nav-icon">🔧</span>
+      <span class="nav-label">Tool</span>
+    </button>
+  </nav>
+
+  <script src="script.js"></script>
+</body>
+</html>
